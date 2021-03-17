@@ -1,12 +1,11 @@
 // 相關設定
 const config = {
-    rotateY: -25,
-    rollback: 0.3,
     fontSize: 100,
     height: 100,
     width: 200,
     gifts: Array.from(new Array(10), (val, index) => { return { type: 'text', name: index }}),
     trigger: null,
+    isRunning: false,
 };
 const data = {
     rotate: 0,
@@ -18,22 +17,23 @@ const giftData = [
     { duration: 7000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
 ]
 
-function autoTurnStop(i, element) {
+const giftContainers = document.querySelectorAll('.gift-container');
+const giftContainersLen = giftContainers.length;
+
+// 停止處理
+function autoTurnStop(index, element) {
     // 把結束時的角度設定為當前角度
-    giftData[i].currentDeg = giftData[i].targetDeg % 360;
-    element.style.setProperty('--currentDeg', `-${giftData[i].currentDeg}deg`);
+    giftData[index].currentDeg = giftData[index].targetDeg % 360;
+    element.style.setProperty('--currentDeg', `-${giftData[index].currentDeg}deg`);
     element.classList.remove('autoTurn');
-    const endDeg = giftData[i].currentDeg + (data.rotate / 2)
+    if((index + 1) === giftContainersLen) config.isRunning = false;
 }
 
 
 function giftContainersStyle(isInit) {
     // 父層樣式處理
-    const giftContainers = document.querySelectorAll('.gift-container');
-    const giftContainersLen = giftContainers.length;
     for (let i = 0; i < giftContainersLen; i++) {
         if(isInit) {
-            giftContainers[i].style.setProperty('--rotateY', config.rotateY + "deg")
             giftContainers[i].style.setProperty('--fontSize', config.fontSize + "px")
             giftContainers[i].style.setProperty('--height', config.height + "px")
             giftContainers[i].style.setProperty('--width', config.width + "px")
@@ -56,8 +56,8 @@ function giftContainersStyle(isInit) {
                 // })
             }
         } else {
+            config.isRunning = true;
             config.trigger = new Date();
-            console.log(config.trigger);
             
             // 取得隨機角度(預設至少跑5圈)
             let randomDeg = (Math.random() * 360) + (360 * 5)
@@ -65,15 +65,8 @@ function giftContainersStyle(isInit) {
             giftData[i].targetDeg = randomDeg
             // console.log('giftData[i].targetDeg: ', giftData[i].targetDeg);
 
-            // 取得隨機回彈角度
-            const randomRollBackDeg = config.rollback
-                ? Math.random() * config.rollback + 1
-                : 1
-            // console.log('randomRollBackDeg: ', randomRollBackDeg);
-
             // 設定轉動角度
             giftContainers[i].style.setProperty('--targetDeg', `-${giftData[i].targetDeg}deg`)
-            giftContainers[i].style.setProperty('--rollBackDeg', `${randomRollBackDeg}`)
 
             giftContainers[i].classList.add('autoTurn')
             setTimeout(() => {
@@ -86,22 +79,8 @@ function giftContainersStyle(isInit) {
 
 // turn 事件觸發
 function clickTurn() {
-    giftContainersStyle(false);
+    config.isRunning || giftContainersStyle(false);
 }
-
-// 紀錄
-function logGiftsDeg () {
-  // 紀錄獎品角度
-  gifts.forEach((gift, index) => {
-    this.giftsDeg[index] = {
-      from: index === 0 ? 0 : this.giftsDeg[index - 1].to,
-      to: index === 0 ? this.rotate : this.giftsDeg[index - 1].to + this.rotate,
-      name: gift.name
-    }
-  })
-}
-
-
 
 window.onload = function() {
     // 基本樣式
