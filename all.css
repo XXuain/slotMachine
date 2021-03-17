@@ -15,6 +15,10 @@
   height: 100vh;
 }
 
+.container .ad-banner {
+  width: 500px;
+}
+
 .play-wrap-window {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -35,16 +39,11 @@
   height: 500px;
 }
 
-.play-wrap-window .ad-banner {
-  width: 500px;
-  margin-bottom: 20px;
-}
-
 .play-wrap-window .play-wrap-window-shadow {
   z-index: 1;
   position: absolute;
   width: 800px;
-  height: 200px;
+  height: 300px;
   border-radius: 20px;
   -webkit-box-shadow: inset 0 0 10px #000000;
           box-shadow: inset 0 0 10px #000000;
@@ -74,7 +73,7 @@
       -ms-flex-pack: center;
           justify-content: center;
   width: 800;
-  height: 200px;
+  height: 300px;
   overflow: hidden;
   border-radius: 20px;
 }

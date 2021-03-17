@@ -4,85 +4,68 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>slot machine scroll sheet</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="./all.css">
 </head>
 <body>
     <div class="container">
-        <div class="play-container">
-            <div class="box-content">
-                <div class="box-wrap">
-                    <div class="box-link">1</div>
-                    <div class="box-link">2</div>
-                    <div class="box-link">3</div>
-                    <div class="box-link">4</div>
-                    <div class="box-link">5</div>
+        <img class="ad-banner" src="./assets/ad-1.png" alt="" />
+        <div class="play-wrap-window">
+            <div class="play-wrap-show">
+                <div class="gift-container flat">
+                    <div class="gift"><img src="./assets/item-0.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-1.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-2.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-3.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-4.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-5.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-6.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-7.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-8.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-9.png" alt=""></div>
                 </div>
-            </div>
-
-            <div class="box-content">
-                <div class="box-wrap">
-                    <div class="box-link">1</div>
-                    <div class="box-link">2</div>
-                    <div class="box-link">3</div>
-                    <div class="box-link">4</div>
-                    <div class="box-link">5</div>
+                <div class="gift-container flat">
+                    <div class="gift"><img src="./assets/item-0.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-1.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-2.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-3.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-4.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-5.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-6.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-7.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-8.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-9.png" alt=""></div>
                 </div>
-            </div>
-
-            <div class="box-content">
-                <div class="box-wrap">
-                    <div class="box-link">1</div>
-                    <div class="box-link">2</div>
-                    <div class="box-link">3</div>
-                    <div class="box-link">4</div>
-                    <div class="box-link">5</div>
+                <div class="gift-container flat">
+                    <div class="gift"><img src="./assets/item-0.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-1.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-2.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-3.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-4.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-5.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-6.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-7.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-8.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-9.png" alt=""></div>
                 </div>
+                <div class="gift-container flat">
+                    <div class="gift"><img src="./assets/item-0.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-1.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-2.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-3.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-4.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-5.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-6.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-7.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-8.png" alt=""></div>
+                    <div class="gift"><img src="./assets/item-9.png" alt=""></div>
+                </div>
+                <div class="play-wrap-window-shadow"></div>
             </div>
-            <button id="StartBtn">Start</button>
-        </div>
-        <div>
+            <div id="TURN" class="turn-btn"></div>
         </div>
     </div>
 </body>
-<style>
-    .play-container {
-        display: flex;
-    }
-
-    .box-content {
-        border: 1px solid red;
-        height: 30px;
-        width: 20px;
-        position: relative;
-        /* overflow: hidden; */
-    }
-    .box-wrap {
-        border: 1px solid black;
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .box-link {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 30px;
-    }
-</style>
 </html>
 
-<script>
-    function start(numbers) {
-        var boxWraps = document.querySelectorAll('.box-wrap');
-        console.log(boxWraps);
-        
-        
-    }
-
-    window.onload = function() {
-        var btn = document.querySelector('#StartBtn');
-        btn.addEventListener('click', function() {start([5,9,8])})
-    }
-</script>
+<script src="./all.js"></script>
