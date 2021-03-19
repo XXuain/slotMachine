@@ -9,7 +9,13 @@ const config = {
 };
 
 const giftData = [
-    { duration: 4000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
+    { 
+        duration: 4000,  // 期間
+        gifts: config.gifts,
+        giftsDeg: [], // 紀錄 gifts 角度
+        targetDeg: 0, // 目標角度
+        currentDeg: 0 // 當前角度
+    },
     { duration: 5000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
     { duration: 6000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
     { duration: 7000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
@@ -28,9 +34,18 @@ const arrayToHtmlDOM = (arr, id) => {
 }
 
 const turnController = {
+    currentGiftDom: [],
+    giftNameList: [], // 獎品 list [[xx, xx ,xx], [mm, mm, mm]]
+    currentGiftNameItems: [],
+
     // 父層 DOM
     giftContainers() { return document.querySelectorAll('.gift-container') },
     giftContainersLen() { return this.giftContainers().length },
+
+    // 子層 DOM
+    gifts(parentId) {
+        return this.giftContainers()[parentId].getElementsByClassName('gift');
+    },
     
     // 父層 DOM style handler
     giftContainersStyle(){
@@ -42,19 +57,64 @@ const turnController = {
             dom[i].style.setProperty('--width', config.width + "px")
             dom[i].style.setProperty('--duration', giftData[i].duration + "ms")
             dom[i].style.setProperty('--currentDeg', giftData[i].currentDeg + "deg")
-            this.giftStyle(dom[i])
+            this.giftStyle(i)
         }
     },
 
     // 子層 DOM style handler
-    giftStyle(parentDom) {
-        const dom = parentDom ? parentDom.getElementsByClassName('gift') : [];
+    giftStyle(parentIndex) {
+        const dom = this.gifts(parentIndex);
         const len = dom.length;
         config.rotate = ( 360 / len );
         const translateZ = '153.884'; // dodo
 
         for (let i = 0; i < len; i++) {
             dom[i].style.transform = "rotateX(" + (config.rotate * i) + "deg) translateZ(" + translateZ + "px)";
+            this.logGiftsDeg(parentIndex, i);
+        }
+    },
+
+    // 紀錄子層角度
+    logGiftsDeg(parentIndex, index) {
+        const currentName = giftData[parentIndex].gifts[index].name;
+        giftData[parentIndex].giftsDeg[index] = {
+            from: index === 0 ? 0 : giftData[parentIndex].giftsDeg[index - 1].to,
+            to: index === 0 ? config.rotate : giftData[parentIndex].giftsDeg[index - 1].to + config.rotate,
+            name: currentName
+        }
+    },
+
+    // 當前資料處理
+    currentGiftLog(index) {
+        // 顯示獎品資料(結束角度 + 單片角度/2)
+        const endDeg = giftData[index].currentDeg + (config.rotate / 2)
+        giftData[index].giftsDeg.forEach((gift, i) => {
+            if (endDeg >= gift.from && endDeg <= gift.to) {
+                // 找到名字 加入樣式
+                this.currentGiftNameItems.push(gift.name);
+                this.currentGiftAddStyle(index, gift.name);
+            }
+        });
+    },
+
+    // 當前獎項標註
+    currentGiftAddStyle(parentIndex, giftName) {
+        const dom = this.gifts(parentIndex);
+        for(let item of dom) {
+            if (item.dataset.name == giftName) {
+                this.currentGiftDom.push(item);
+                item.classList.add('currentGift');
+            };
+        }
+    },
+
+    // 當前獎項紀錄 並恢復獎項樣式
+    logGiftNameList() {
+        this.giftNameList.push(this.currentGiftNameItems);
+        // console.log('logGiftNameList: ', this.giftNameList);
+        this.currentGiftNameItems = [];
+        for(let item of this.currentGiftDom) {
+            item.classList.remove('currentGift');
         }
     },
 
@@ -62,6 +122,7 @@ const turnController = {
     autoTurn() {
         if(!config.isRunning) {
             config.isRunning = true;
+            this.currentGiftNameItems.length && this.logGiftNameList();
             const giftDataLen = giftData.length;
             const dom = this.giftContainers();
     
@@ -81,12 +142,28 @@ const turnController = {
     },
 
     // 停止轉動
-    autoTurnStop(index, dom) {
+    autoTurnStop(index, parentDom) {
         // 把結束時的角度設定為當前角度
         giftData[index].currentDeg = giftData[index].targetDeg % 360;
-        dom.style.setProperty('--currentDeg', `-${giftData[index].currentDeg}deg`);
-        dom.classList.remove('autoTurn');
-        if((index + 1) === this.giftContainersLen()) config.isRunning = false;
+        parentDom.style.setProperty('--currentDeg', `-${giftData[index].currentDeg}deg`);
+        parentDom.classList.remove('autoTurn');
+        // 紀錄當前資料
+        this.currentGiftLog(index)
+        if((index + 1) === this.giftContainersLen()) {
+            config.isRunning = false;
+            // this.logGiftNameList();
+        }
+    },
+
+    // 
+    openTurnLog() {
+        console.log('openTurnLog');
+        const logListDom = document.querySelector('.logList');
+        console.log('logListDom: ', logListDom, this.giftNameList);
+        logListDom.innerHTML += this.giftNameList.map(item=>{
+            console.log('giftNameList: ', item);
+            return `<li>${item}</li>`;
+        }).join('');
     }
 }
 
@@ -98,8 +175,10 @@ const onload = function() {
     turnController.giftContainersStyle();
 
     // 掛載事件
-    const turnBtn = document.querySelector('#TURN');
+    const turnBtn = document.querySelector('#TURN-BTN');
+    const logBtn = document.querySelector('#LOG-BTN');
     turnBtn.addEventListener('click', function(){ turnController.autoTurn(); })
+    // logBtn.addEventListener('click', function(){ turnController.openTurnLog(); })
 }();
 
 window.onload = onload;

@@ -51,16 +51,51 @@
           box-shadow: inset 0 0 10px #000000;
 }
 
-.play-wrap-window .turn-btn {
+.play-wrap-window .btn-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 10px;
+}
+
+.play-wrap-window .btn-group .turn-btn {
   cursor: pointer;
   background: #ffffff url("./assets/startBtn.png") no-repeat right top;
   width: 95px;
   height: 36px;
-  margin-top: 10px;
+  margin-right: 10px;
 }
 
-.play-wrap-window .turn-btn:hover {
+.play-wrap-window .btn-group .turn-btn:hover {
   background: #ffffff url("./assets/startBtn-active.png") no-repeat right top;
+}
+
+.play-wrap-window .btn-group .log-btn {
+  cursor: pointer;
+  padding: 6px;
+  color: white;
+  background-color: #ff761b;
+  border: 2px solid #ffbb00;
+}
+
+.dialog {
+  position: absolute;
+  display: none;
+  z-index: 100;
+  width: 200px;
+  height: 200px;
+  background-color: #ff761b;
+  border: 2px solid #ffbb00;
+}
+
+.dialog.show {
+  display: block;
 }
 
 .play-wrap-show {
@@ -122,6 +157,11 @@
   background-image: -webkit-gradient(linear, left top, right top, from(#fffeea), color-stop(#ffff8e), to(#fffeea));
   background-image: linear-gradient(to right, #fffeea, #ffff8e, #fffeea);
   font-size: var(--fontSize);
+}
+
+.gift-container .gift.currentGift {
+  background-image: -webkit-gradient(linear, left top, right top, from(#ffa162), color-stop(#ff6f0f), to(#ffa162));
+  background-image: linear-gradient(to right, #ffa162, #ff6f0f, #ffa162);
 }
 
 .gift-container.flat {

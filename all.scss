@@ -29,16 +29,42 @@
     border-radius: 20px;
     box-shadow: inset 0 0 10px #000000;
   }
-
-  .turn-btn {
-    cursor: pointer;
-    background: #ffffff url("./assets/startBtn.png") no-repeat right top;
-    width: 95px;
-    height: 36px;
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 10px;
-    &:hover {
-      background: #ffffff url("./assets/startBtn-active.png") no-repeat right top;
+    .turn-btn {
+      cursor: pointer;
+      background: #ffffff url("./assets/startBtn.png") no-repeat right top;
+      width: 95px;
+      height: 36px;
+      margin-right: 10px;
+      &:hover {
+        background: #ffffff url("./assets/startBtn-active.png") no-repeat right top;
+      }
     }
+    .log-btn {
+      cursor: pointer;
+      padding: 6px;
+      color: white;
+      background-color: #ff761b;
+      border: 2px solid rgb(255, 187, 0);
+    }
+  }
+}
+
+.dialog {
+  position: absolute;
+  display: none;
+  z-index: 100;
+  width: 200px;
+  height: 200px;
+  background-color: #ff761b;
+  border: 2px solid rgb(255, 187, 0);
+
+  &.show {
+    display: block;
   }
 }
 
@@ -60,8 +86,8 @@
   $fontSize: var(--fontSize);
   $currentDeg: var(--currentDeg);
   $targetDeg: var(--targetDeg);
-  // $rollBackDeg: var(--rollBackDeg);
   $duration: var(--duration);
+  $currentGift: 1;
   * {
       box-sizing: border-box;
   }
@@ -85,13 +111,16 @@
       border-left: 1px solid rgb(241, 61, 61);
       background-image: linear-gradient(to right, #fffeea , rgb(255, 255, 142), #fffeea);
       font-size: $fontSize;
+      &.currentGift {
+        background-image: linear-gradient(to right, #ffa162 , #ff6f0f, #ffa162);
+      }
   }
 
   &.flat {
-    transform: rotateX($currentDeg);
+    transform: rotateX($currentDeg); // 當前角度
     &.autoTurn {
       transition: $duration ease-in-out;
-      transform: rotateX($targetDeg);
+      transform: rotateX($targetDeg); // 轉動至目標角度
     }
   }
     
