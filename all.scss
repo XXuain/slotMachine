@@ -18,10 +18,12 @@
   background-size: contain;
   width: 1000px;
   height: 500px;
+  position: relative;
   
   .play-wrap-window-shadow {
     z-index: 1;
     position: absolute;
+    top: 77px;
     width: 800px;
     height: 300px;
     border-radius: 20px;
@@ -42,7 +44,6 @@
 
 
 .play-wrap-show {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
