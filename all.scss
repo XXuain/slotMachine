@@ -58,13 +58,21 @@
   position: absolute;
   display: none;
   z-index: 100;
-  width: 200px;
-  height: 200px;
+  width: 100px;
   background-color: #ff761b;
   border: 2px solid rgb(255, 187, 0);
-
+  box-shadow: 0 0 51px #656565;
   &.show {
     display: block;
+  }
+  .logList {
+    list-style: none;
+    padding: 0px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 

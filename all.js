@@ -34,17 +34,18 @@ const arrayToHtmlDOM = (arr, id) => {
 }
 
 const turnController = {
-    currentGiftDom: [],
+    currentGiftDomItems: [],
     giftNameList: [], // 獎品 list [[xx, xx ,xx], [mm, mm, mm]]
     currentGiftNameItems: [],
+    isOpen: false,
 
     // 父層 DOM
     giftContainers() { return document.querySelectorAll('.gift-container') },
     giftContainersLen() { return this.giftContainers().length },
 
     // 子層 DOM
-    gifts(parentId) {
-        return this.giftContainers()[parentId].getElementsByClassName('gift');
+    gifts(parentIndex) {
+        return this.giftContainers()[parentIndex].getElementsByClassName('gift');
     },
     
     // 父層 DOM style handler
@@ -67,7 +68,6 @@ const turnController = {
         const len = dom.length;
         config.rotate = ( 360 / len );
         const translateZ = '153.884'; // dodo
-
         for (let i = 0; i < len; i++) {
             dom[i].style.transform = "rotateX(" + (config.rotate * i) + "deg) translateZ(" + translateZ + "px)";
             this.logGiftsDeg(parentIndex, i);
@@ -84,45 +84,42 @@ const turnController = {
         }
     },
 
-    // 當前資料處理
-    currentGiftLog(index) {
+    // 紀錄各個資料 用紀錄角度找到名字 並回傳
+    currentGiftName(index) {
         // 顯示獎品資料(結束角度 + 單片角度/2)
         const endDeg = giftData[index].currentDeg + (config.rotate / 2)
+        let giftName = null;
         giftData[index].giftsDeg.forEach((gift, i) => {
             if (endDeg >= gift.from && endDeg <= gift.to) {
-                // 找到名字 加入樣式
-                this.currentGiftNameItems.push(gift.name);
-                this.currentGiftAddStyle(index, gift.name);
+                giftName = gift.name;
             }
         });
+        return giftName;
     },
 
-    // 當前獎項標註
-    currentGiftAddStyle(parentIndex, giftName) {
+    // 回傳當前 gift dom
+    currentGiftDom(parentIndex, giftName) {
         const dom = this.gifts(parentIndex);
+        let giftDom = null;
         for(let item of dom) {
-            if (item.dataset.name == giftName) {
-                this.currentGiftDom.push(item);
-                item.classList.add('currentGift');
-            };
+            item.dataset.name == giftName && (giftDom = item);
         }
+        return giftDom;
     },
 
     // 當前獎項紀錄 並恢復獎項樣式
-    logGiftNameList() {
-        this.giftNameList.push(this.currentGiftNameItems);
-        // console.log('logGiftNameList: ', this.giftNameList);
-        this.currentGiftNameItems = [];
-        for(let item of this.currentGiftDom) {
+    removeGiftStyle() {
+        for(let item of this.currentGiftDomItems) {
             item.classList.remove('currentGift');
         }
+        this.currentGiftNameItems = [];
     },
 
     // 開始轉動
     autoTurn() {
         if(!config.isRunning) {
             config.isRunning = true;
-            this.currentGiftNameItems.length && this.logGiftNameList();
+            this.currentGiftNameItems.length && this.removeGiftStyle();
             const giftDataLen = giftData.length;
             const dom = this.giftContainers();
     
@@ -147,23 +144,39 @@ const turnController = {
         giftData[index].currentDeg = giftData[index].targetDeg % 360;
         parentDom.style.setProperty('--currentDeg', `-${giftData[index].currentDeg}deg`);
         parentDom.classList.remove('autoTurn');
-        // 紀錄當前資料
-        this.currentGiftLog(index)
+        
+         // 紀錄各個資料
+        const giftName = this.currentGiftName(index);
+        this.currentGiftNameItems.push(giftName);
+        
+        // 加上樣式
+        const giftDom = this.currentGiftDom(index, giftName);
+        this.currentGiftDomItems.push(giftDom);
+        giftDom.classList.add('currentGift');
+        
+        // 所有都停止時
         if((index + 1) === this.giftContainersLen()) {
             config.isRunning = false;
-            // this.logGiftNameList();
+            this.giftNameList.push(this.currentGiftNameItems);
         }
     },
 
     // 
     openTurnLog() {
-        console.log('openTurnLog');
-        const logListDom = document.querySelector('.logList');
-        console.log('logListDom: ', logListDom, this.giftNameList);
-        logListDom.innerHTML += this.giftNameList.map(item=>{
-            console.log('giftNameList: ', item);
-            return `<li>${item}</li>`;
-        }).join('');
+        this.isOpen = !this.isOpen;
+        const dialog = document.querySelector('.dialog');
+        console.log(dialog.classList);
+        if(this.isOpen) {
+            const logListDom = document.querySelector('.logList');
+            const logLen = logListDom.getElementsByTagName('li').length;
+            console.log(logLen, this.giftNameList.length);
+            if(logLen == 0 || logLen != this.giftNameList.length) {
+                
+                logListDom.innerHTML += this.giftNameList.map(item=>{
+                    return `<li>${item.join(',')}</li>`;
+                }).join('');
+            }
+        }
     }
 }
 
@@ -178,7 +191,7 @@ const onload = function() {
     const turnBtn = document.querySelector('#TURN-BTN');
     const logBtn = document.querySelector('#LOG-BTN');
     turnBtn.addEventListener('click', function(){ turnController.autoTurn(); })
-    // logBtn.addEventListener('click', function(){ turnController.openTurnLog(); })
+    logBtn.addEventListener('click', function(){ turnController.openTurnLog(); })
 }();
 
 window.onload = onload;

@@ -88,14 +88,34 @@
   position: absolute;
   display: none;
   z-index: 100;
-  width: 200px;
-  height: 200px;
+  width: 100px;
   background-color: #ff761b;
   border: 2px solid #ffbb00;
+  -webkit-box-shadow: 0 0 51px #656565;
+          box-shadow: 0 0 51px #656565;
 }
 
 .dialog.show {
   display: block;
+}
+
+.dialog .logList {
+  list-style: none;
+  padding: 0px;
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .play-wrap-show {
