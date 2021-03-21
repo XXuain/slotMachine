@@ -9,15 +9,15 @@ const config = {
 
 const giftData = [
     { 
-        duration: 4000,  // 期間
+        duration: 1000,  // 期間
         gifts: config.gifts,
         giftsDeg: [], // 紀錄 gifts 角度
         targetDeg: 0, // 目標角度
         currentDeg: 0 // 當前角度
     },
-    { duration: 5000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
-    { duration: 6000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
-    { duration: 7000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
+    { duration: 2000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
+    { duration: 3000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
+    { duration: 4000, gifts: config.gifts, giftsDeg: [], targetDeg: 0, currentDeg: 0},
 ]
 
 // 繪製 DOM Structure
@@ -126,7 +126,7 @@ const turnController = {
             const dom = this.giftContainers();
     
             for(let i = 0; i < giftDataLen; i++) {
-                let randomDeg = (Math.random() * 360) + (360 * 5) // 取得隨機角度(預設至少跑5圈)
+                let randomDeg = (Math.random() * 360) + (360 * 3) // 取得隨機角度(預設至少跑5圈)
                 randomDeg -= randomDeg % config.rotate // 減去餘數，避免有高低不一的狀況
                 giftData[i].targetDeg = randomDeg
     
