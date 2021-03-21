@@ -4,7 +4,6 @@ const config = {
     height: 100,
     width: 200,
     gifts: Array.from(new Array(10), (val, index) => { return { type: 'text', name: index }}),
-    isRunning: false,
     rotate: 0,
 };
 
@@ -39,6 +38,7 @@ const turnController = {
     currentGiftNameList: [],
     currentGiftNameItems: [],
     isOpen: false,
+    isRunning: false,
 
     // 父層 DOM
     giftContainers() { return document.querySelectorAll('.gift-container') },
@@ -118,9 +118,9 @@ const turnController = {
 
     // 開始轉動
     autoTurn() {
-        if(!config.isRunning) {
-            config.isRunning = true;
-            this.openTurnLog();
+        if(!this.isRunning) {
+            this.isRunning = true;
+            this.closeTurnLog();
             this.currentGiftNameItems.length && this.removeGiftStyle();
             const giftDataLen = giftData.length;
             const dom = this.giftContainers();
@@ -158,17 +158,17 @@ const turnController = {
         
         // 所有都停止時
         if((index + 1) === this.giftContainersLen()) {
-            config.isRunning = false;
+            this.isRunning = false;
             this.currentGiftNameList.push(this.currentGiftNameItems);
         }
     },
 
-    // 獎項彈窗處理
+    // 開啟彈窗處理
     openTurnLog() {
         const dialog = document.querySelector('.dialog');
         const logListDom = document.querySelector('.logList');
         this.isOpen = !this.isOpen;
-        if(this.isOpen) {
+        if(this.isOpen && !this.isRunning) {
             dialog.classList.add('show');
             if(this.currentGiftNameList.length) {
                 logListDom.innerHTML += this.currentGiftNameList.map(item=>{
@@ -178,8 +178,14 @@ const turnController = {
                 this.currentGiftNameList = [];
             }
         } else {
-            dialog.classList.remove('show');
+            this.closeTurnLog()
         }
+    }, 
+
+    // 關閉彈窗處理
+    closeTurnLog() {
+        const dialog = document.querySelector('.dialog');
+        dialog.classList.remove('show');
     }
 }
 
