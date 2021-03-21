@@ -36,6 +36,7 @@ const arrayToHtmlDOM = (arr, id) => {
 const turnController = {
     currentGiftDomItems: [],
     giftNameList: [], // 獎品 list [[xx, xx ,xx], [mm, mm, mm]]
+    currentGiftNameList: [],
     currentGiftNameItems: [],
     isOpen: false,
 
@@ -119,6 +120,7 @@ const turnController = {
     autoTurn() {
         if(!config.isRunning) {
             config.isRunning = true;
+            this.openTurnLog();
             this.currentGiftNameItems.length && this.removeGiftStyle();
             const giftDataLen = giftData.length;
             const dom = this.giftContainers();
@@ -157,25 +159,26 @@ const turnController = {
         // 所有都停止時
         if((index + 1) === this.giftContainersLen()) {
             config.isRunning = false;
-            this.giftNameList.push(this.currentGiftNameItems);
+            this.currentGiftNameList.push(this.currentGiftNameItems);
         }
     },
 
-    // 
+    // 獎項彈窗處理
     openTurnLog() {
-        this.isOpen = !this.isOpen;
         const dialog = document.querySelector('.dialog');
-        console.log(dialog.classList);
+        const logListDom = document.querySelector('.logList');
+        this.isOpen = !this.isOpen;
         if(this.isOpen) {
-            const logListDom = document.querySelector('.logList');
-            const logLen = logListDom.getElementsByTagName('li').length;
-            console.log(logLen, this.giftNameList.length);
-            if(logLen == 0 || logLen != this.giftNameList.length) {
-                
-                logListDom.innerHTML += this.giftNameList.map(item=>{
+            dialog.classList.add('show');
+            if(this.currentGiftNameList.length) {
+                logListDom.innerHTML += this.currentGiftNameList.map(item=>{
                     return `<li>${item.join(',')}</li>`;
                 }).join('');
+                this.giftNameList.push(this.currentGiftNameList);
+                this.currentGiftNameList = [];
             }
+        } else {
+            dialog.classList.remove('show');
         }
     }
 }
